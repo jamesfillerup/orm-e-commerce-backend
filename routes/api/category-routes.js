@@ -41,17 +41,28 @@ router.get('/:id', (req, res) => {
 });
 
 router.post('/', (req, res) => {
+//create a new category
 
-  if(req.body.category_name)
-  Category.create(req.body)
-    .then(categories => {
+  Category.create({
+    category_name: req.body.category_name
+  })
+  
+  .then(categories => res.json(categories))
+  .catch(err => {
+    console.log(err);
+    res.status(400).json(err);
+  });
 
-      res.json(categories)
-    })
-    else{
-      res.status(400)
-      .send('no body provided')
-    }
+  // if(req.body.category_name)
+  // Category.create(req.body)
+  //   .then(categories => {
+
+  //     res.json(categories)
+  //   })
+  //   else{
+  //     res.status(400)
+  //     .send('no body provided')
+  //   }
 });
 
 router.put('/:id', (req, res) => {
@@ -63,7 +74,7 @@ router.put('/:id', (req, res) => {
   })
   .then(categories => {
     if (!categories[0]) {
-      res.status(404).json({ message: 'No user found with this id' });
+      res.status(404).json({ message: 'No category found with this id' });
       return;
     }
     res.json(categories);
@@ -83,7 +94,7 @@ router.delete('/:id', (req, res) => {
   })
   .then(categories => {
     if (!categories) {
-      res.status(404).json({ message: 'No user found with this id' });
+      res.status(404).json({ message: 'No category found with this id' });
       return;
     }
     res.json(categories);
