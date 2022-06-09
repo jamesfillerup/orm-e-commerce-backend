@@ -5,6 +5,7 @@ const { Category, Product } = require('../../models');
 // The `/api/categories` endpoint
 
 router.get('/', (req, res) => {
+  console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
   // find all categories
   // be sure to include its associated Products
   Category.findAll({
@@ -20,25 +21,35 @@ router.get('/', (req, res) => {
     });
 });
 
+
 router.get('/:id', (req, res) => {
-  // find one category by its `id` value
-  // be sure to include its associated Products
+  console.log('-------------------')
+  //   // find one category by its `id` value
+  //   // be sure to include its associated Products
   Category.findOne({
+
     where: {
       id: req.params.id
     },
     include: {
-      model: Product
+      model: Product,
+      attributes: ['id', 'product_name', 'price', 'stock', 'category_id']
     }
+  })
+
     .then(categories => {
-      if (!categories) {
+      if(!categories) {
         res.status(404).json({message: `Category ID not found`});
         return;
       }
-
+      res.json(categories);
     })
-  })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err)
+    });
 });
+
 
 router.post('/', (req, res) => {
 //create a new category

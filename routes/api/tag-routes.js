@@ -8,7 +8,7 @@ router.get('/', (req, res) => {
   // be sure to include its associated Product data
   Tag.findAll({
     include: [{
-      model: Product
+      model: Product, as: "product_tags"
     }]
   })
     .then(tagInfo => res.json(tagInfo))
@@ -26,16 +26,20 @@ router.get('/:id', (req, res) => {
       id: req.params.id
     },
     include: {
-      model: Product
+      model: Product, as: "product_tags"
     }
-    .then(tagInfo => {
-      if (!tagInfo) {
-        res.status(404).json({message: `Tag ID not found`});
-        return;
-      }
-
-    })
   })
+  .then(tagInfo => {
+    if (!tagInfo) {
+      res.status(404).json({message: `Tag ID not found`});
+      return;
+    }
+    res.json(tagInfo);
+  })
+  .catch(err => {
+    console.log(err);
+    res.status(500).json(err);
+  });
 
 });
 
