@@ -5,22 +5,25 @@ const { Product, Category, Tag, ProductTag } = require('../../models');
 
 // get all products
 router.get('/', (req, res) => {
+  console.log('---------getall___--')
   // find all products
   // be sure to include its associated Category and Tag data
   Product.findAll({
     include: [{
-      model: Category
+      model: Category,
+      // as: 'product_tags'
     },
-  {
-    model: Tag
-  }]
+    {
+      model: Tag,
+      // as: 'product_tags'
+    }]
   })
 
   .then(productInfo => res.json(productInfo))
-    .catch(err => {
-      console.log(err);
-      res.status(500).json(err);
-    });
+  .catch(err => {
+    console.log(err);
+    res.status(500).json(err);
+  });
 });
 
 // get one product
@@ -62,38 +65,39 @@ router.post('/', (req, res) => {
     }
   */
   
-    // Post.create({
-    //   product_name: req.body.product_name,
-    //   price: req.body.price,
-    //   stock: req.body.stock,
-    //   tagIds: req.body.tagIds
-    // })
-    //   .then(productInfo => res.json(productInfo))
-    //   .catch(err => {
-    //     console.log(err);
-    //     res.status(500).json(err);
-    //   });
-
-  Product.create(req.body)
-    .then((product) => {
-      // if there's product tags, we need to create pairings to bulk create in the ProductTag model
-      if (req.body.tagIds.length) {
-        const productTagIdArr = req.body.tagIds.map((tag_id) => {
-          return {
-            product_id: product.id,
-            tag_id,
-          };
-        });
-        return ProductTag.bulkCreate(productTagIdArr);
-      }
-      // if no product tags, just respond
-      res.status(200).json(product);
+    Product.create({
+      product_name: req.body.product_name,
+      price: req.body.price,
+      stock: req.body.stock,
+      tagIds: req.body.tagIds
     })
-    .then((productTagIds) => res.status(200).json(productTagIds))
-    .catch((err) => {
+
+    .then(productInfo => res.json(productInfo))
+    .catch(err => {
       console.log(err);
-      res.status(400).json(err);
+      res.status(500).json(err);
     });
+
+  // Product.create(req.body)
+  //   .then((product) => {
+  //     // if there's product tags, we need to create pairings to bulk create in the ProductTag model
+  //     if (req.body.tagIds.length) {
+  //       const productTagIdArr = req.body.tagIds.map((tag_id) => {
+  //         return {
+  //           product_id: product.id,
+  //           tag_id,
+  //         };
+  //       });
+  //       return ProductTag.bulkCreate(productTagIdArr);
+  //     }
+  //     // if no product tags, just respond
+  //     res.status(200).json(product);
+  //   })
+  //   .then((productTagIds) => res.status(200).json(productTagIds))
+  //   .catch((err) => {
+  //     console.log(err);
+  //     res.status(400).json(err);
+  //   });
 });
 
 // update product
@@ -105,9 +109,10 @@ router.put('/:id', (req, res) => {
     },
     
   })
-    .then((product) => {
+    .then((products) => {
       // find all associated tags from ProductTag
-      return ProductTag.findAll({ where: { product_id: req.params.id } });
+      return ProductTag.findAll({ 
+        where: { product_id: req.params.id } });
     })
     .then((productTags) => {
       // get list of current tag_ids
