@@ -23,10 +23,22 @@ Please see video link for a walk through on how to clone it.
 [Clone to your computer](https://drive.google.com/file/d/15ogCY3Q-JLWhteoSiIoXLkhtK4Z0-mfz/view?usp=sharing "Click Me!")
 <br><br>
 
+[Installation and Seeding](https://drive.google.com/file/d/1VhxXe43-coYHKahcOUd2pmH6_YaxnigR/view?usp=sharing "Click Me!")
+<br><br>
+
+[How it works in Insomnia](https://drive.google.com/file/d/1zYqOT-qPpNyW7erpkMS3bS8mDtIz0mV6/view?usp=sharing "Click Me!")
+<br><br>
+
 Once cloned you can put the following commands in:
 * `npm init`
 * `npm i ` (This should download all of the dependencies)
 * or run `npm i dotenv express mysql2 node sequelize`
+* `mysql -u root -p`
+* `use ecommerce_db;`
+* `source db/schema.sql`
+* `quit`
+* `npm run seed`
+* `npm start`
 
 
 
